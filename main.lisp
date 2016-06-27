@@ -19,7 +19,7 @@
 ;;; Make room space with walls.
 ;;;  e.g. "#....#"
 (defun make-walled-slice (width)
-  (append (list "#") (make-space-slice (- width 2)) (list "#")))
+  (append (cons "#" (make-space-slice (- width 2))) (list "#")))
 
 ;;; Make all room spaces with walls.
 ;;;  e.g. "#....#"
@@ -36,7 +36,7 @@
 ;;;       "#....#"
 ;;;       "######"
 (defun make-room (width height)
-  (append (list (make-wall width)) (make-walled-slices width (- height 2)) (list (make-wall width))))
+  (append (cons (make-wall width) (make-walled-slices width (- height 2))) (list (make-wall width))))
 
 (defun make-random-room ()
     (let ((width (random-from 3 50))
