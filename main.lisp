@@ -1,5 +1,9 @@
 ;;;; Alysaur trying to make a room.
 
+;;; Return random number between the specified low and high value.
+(defun random-from (low high)
+  (+ low (random (- high low -1))))
+
 ;;; Make horizontal wall.
 ;;;  e.g. "######"
 (defun make-wall (width)
@@ -37,9 +41,15 @@
 (defun make-room (width height)
   (append (list (make-wall width)) (make-walled-slices width (- height 2)) (list (make-wall width))))
 
+(defun make-random-room ()
+    (let ((width (random-from 4 50))
+	   (height (random-from 4 10)))
+      (make-room width height)))
+
 ;;; Pretty print a room.
 (defun print-room (room)
   (print (format nil "~%~{~{~a~}~%~}" room)))
 
-;;; Test generation of a 50x7 room.
-(print-room (make-room 50 7))
+;;; Test generation of a random room.
+(make-random-state t)
+(print-room (make-random-room))
