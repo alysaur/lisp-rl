@@ -39,8 +39,8 @@
   (append (list (make-wall width)) (make-walled-slices width (- height 2)) (list (make-wall width))))
 
 (defun make-random-room ()
-    (let ((width (random-from 4 50))
-	   (height (random-from 4 10)))
+    (let ((width (random-from 3 50))
+	   (height (random-from 3 10)))
       (make-room width height)))
 
 ;;; Pretty print a room.
