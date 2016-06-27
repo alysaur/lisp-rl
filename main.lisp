@@ -8,18 +8,19 @@
 ;;;  e.g. "######"
 (defun make-wall (width)
   (loop repeat width
-       collect "#"))
+     collect "#"))
 
 ;;; Make room space.
 ;;;  e.g. "...."
 (defun make-space-slice (width)
   (loop repeat width
-       collect "."))
+     collect "."))
 
 ;;; Make room space with walls.
 ;;;  e.g. "#....#"
 (defun make-walled-slice (width)
-  (append (cons "#" (make-space-slice (- width 2))) (list "#")))
+  (append (cons "#" (make-space-slice (- width 2)))
+	  (list "#")))
 
 ;;; Make all room spaces with walls.
 ;;;  e.g. "#....#"
@@ -27,7 +28,7 @@
 ;;;       "#....#"
 (defun make-walled-slices (width height)
   (loop repeat height
-       collect (make-walled-slice width)))
+     collect (make-walled-slice width)))
 
 ;;; Make complete room.
 ;;;  e.g. "######"
@@ -36,7 +37,9 @@
 ;;;       "#....#"
 ;;;       "######"
 (defun make-room (width height)
-  (append (cons (make-wall width) (make-walled-slices width (- height 2))) (list (make-wall width))))
+  (append (cons (make-wall width)
+		(make-walled-slices width (- height 2)))
+	  (list (make-wall width))))
 
 (defun make-random-room ()
     (let ((width (random-from 3 50))
