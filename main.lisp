@@ -7,16 +7,14 @@
 ;;; Make horizontal wall.
 ;;;  e.g. "######"
 (defun make-wall (width)
-  (if (= width 1)
-    (list "#")
-    (append (make-wall (- width 1)) (list "#"))))
+  (loop repeat width
+       collect "#"))
 
 ;;; Make room space.
 ;;;  e.g. "...."
 (defun make-space-slice (width)
-  (if (= width 1)
-    (list ".")
-    (append (make-space-slice (- width 1)) (list "."))))
+  (loop repeat width
+       collect "."))
 
 ;;; Make room space with walls.
 ;;;  e.g. "#....#"
@@ -28,9 +26,8 @@
 ;;;       "#....#"
 ;;;       "#....#"
 (defun make-walled-slices (width height)
-  (if (= height 1)
-    (list (make-walled-slice width))
-    (append (make-walled-slices width (- height 1)) (list (make-walled-slice width)))))
+  (loop repeat height
+       collect (make-walled-slice width)))
 
 ;;; Make complete room.
 ;;;  e.g. "######"
