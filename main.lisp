@@ -45,7 +45,7 @@
 
 ;;; Pretty print a room.
 (defun print-room (room)
-  (format t "~%~{~{~a~}~%~}" room))
+  (format t "~{~{~a~}~%~}" room))
 
 ;;; Test generation of a random room.
 (make-random-state t)
