@@ -8,19 +8,19 @@
 ;;;  e.g. "######"
 (defun make-wall (width)
   (loop repeat width
-     collect "#"))
+     collect #\#))
 
 ;;; Make room space.
 ;;;  e.g. "...."
 (defun make-space-slice (width)
   (loop repeat width
-     collect "."))
+     collect #\.))
 
 ;;; Make room space with walls.
 ;;;  e.g. "#....#"
 (defun make-walled-slice (width)
-  (nconc (cons "#" (make-space-slice (- width 2)))
-	  (list "#")))
+  (nconc (cons #\# (make-space-slice (- width 2)))
+	  (list #\#)))
 
 ;;; Make all room spaces with walls.
 ;;;  e.g. "#....#"
