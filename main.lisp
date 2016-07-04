@@ -7,14 +7,12 @@
 ;;; Make horizontal wall.
 ;;;  e.g. "######"
 (defun make-wall (width)
-  (loop repeat width
-     collect #\#))
+  (make-list width :initial-element #\#))
 
 ;;; Make room space.
 ;;;  e.g. "...."
 (defun make-space-slice (width)
-  (loop repeat width
-     collect #\.))
+  (make-list width :initial-element #\.))
 
 ;;; Make room space with walls.
 ;;;  e.g. "#....#"
