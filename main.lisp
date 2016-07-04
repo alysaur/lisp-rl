@@ -51,5 +51,5 @@
   (format t "~{~{~a~}~%~}" room))
 
 ;;; Test generation of a random room.
-(make-random-state t)
+(setf *random-state* (make-random-state t))
 (print-room (make-random-room))
