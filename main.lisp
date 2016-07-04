@@ -19,7 +19,7 @@
 ;;; Make room space with walls.
 ;;;  e.g. "#....#"
 (defun make-walled-slice (width)
-  (append (cons "#" (make-space-slice (- width 2)))
+  (nconc (cons "#" (make-space-slice (- width 2)))
 	  (list "#")))
 
 ;;; Make all room spaces with walls.
@@ -37,7 +37,7 @@
 ;;;       "#....#"
 ;;;       "######"
 (defun make-room (width height)
-  (append (cons (make-wall width)
+  (nconc (cons (make-wall width)
 		(make-walled-slices width (- height 2)))
 	  (list (make-wall width))))
 
