@@ -46,10 +46,43 @@
 	(height (random-from 3 10)))
     (make-room width height)))
 
-;;; Pretty print a room.
-(defun print-room (room)
+(defun draw-room (room)
+  "Draw the specified room to standard output."
   (format t "~{~{~a~}~%~}" room))
+
+(defgeneric draw (shape)
+  (:documentation "Draw the specified shape to the screen."))
+
+(defmethod draw ((shape room))
+  "Draw the specified room to the screen."
+  (draw-room (slot-value shape 'data)))
+
+(defclass shape ()
+  ((x-position :initarg :x
+	       :initform 0
+	       :accessor x
+	       :documentation "Position of the shape's x-coordinate.")
+   (y-position :initarg :y
+	       :initform 0
+	       :accessor y
+	       :documentation "Position of the shape's y-coordinate.")))
+
+(defclass room (shape)
+  ((width :initarg :width
+	  :initform (random-from 4 71)
+	  :accessor width
+	  :documentation "Width of the room.")
+   (height :initarg :height
+	   :initform (random-from 4 13)
+	   :accessor height
+	   :documentation "Height of the room.")
+   data))
+
+(defmethod initialize-instance :after ((room room) &key)
+  "Initialize data with a room of the specified width and height."
+  (with-slots (width height data) room
+    (setf data (make-room width height))))
 
 ;;; Test generation of a random room.
 (setf *random-state* (make-random-state t))
-(print-room (make-random-room))
+(draw (make-instance 'room))
