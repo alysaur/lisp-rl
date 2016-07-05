@@ -17,8 +17,9 @@
 (defun make-walled-slice (width)
   "Make a slice of walled space of the specified width.
     e.g. '#....#'"
-  (nconc (cons #\# (make-space-slice (- width 2)))
-	  (list #\#)))
+  (cons #\#
+	(nconc (make-space-slice (- width 2))
+	       (list #\#))))
 
 (defun make-walled-slices (width height)
   "Make slices of walled space of the specified width and height.
@@ -35,9 +36,9 @@
          '#....#'
          '#....#'
          '######'"
-  (nconc (cons (make-wall width)
-		(make-walled-slices width (- height 2)))
-	  (list (make-wall width))))
+  (cons (make-wall width)
+	(nconc (make-walled-slices width (- height 2))
+	       (list (make-wall width)))))
 
 (defun make-random-room ()
   "Make a room of random width and height."
