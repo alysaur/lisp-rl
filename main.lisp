@@ -1,4 +1,4 @@
-;;;; Alysaur trying to make a room.
+;;;; Alysaur trying to make a floor.
 
 (defun random-from (low high)
   "Return a random number between the specified low and high limits."
@@ -76,12 +76,47 @@
 	   :initform (random-from 4 13)
 	   :accessor height
 	   :documentation "Height of the room.")
-   data))
+   (data :accessor data
+	 :documentation "A list of lists for the tiles in a room.")))
 
 (defmethod initialize-instance :after ((room room) &key)
   "Initialize data with a room of the specified width and height."
   (with-slots (width height data) room
     (setf data (make-room width height))))
+
+(defclass floor (shape)
+  ((top :initform 0
+	:accessor top
+	:documentation "First y-coordinate of the floor.")
+   (left :initform 0
+	 :accessor left
+	 :documentation "First x-coordinate of the floor.")
+   (bottom :initform 0
+	   :accessor bottom
+	   :documentation "Last y-coordinate of the floor.")
+   (right :initform 0
+	  :accessor right
+	  :documentation "Last x-coordinate of the floor.")
+   (rooms :initform '()
+	  :accessor data
+	  :documentation "List of rooms on the floor.")))
+
+(defmethod add ((room room) (floor floor))
+  (with-accessors ((top top)
+		   (left left)
+		   (bottom bottom)
+		   (right right)
+		   (data data)) floor
+    (with-accessors ((x x)
+		     (y y)
+		     (width width)
+		     (height height)) room
+      ;; TODO: check for no overlap
+      (setf top (min y top))
+      (setf left (min x left))
+      (setf bottom (max (+ y height) bottom))
+      (setf right (max (+ x width) right))
+      (push room data))))
 
 ;;; Test generation of a random room.
 (setf *random-state* (make-random-state t))
