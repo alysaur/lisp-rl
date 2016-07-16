@@ -90,6 +90,17 @@
   (with-slots (width height data) room
     (setf data (make-room width height))))
 
+(defun has-overlap (room rooms)
+  "Check if a room overlaps with a list of rooms."
+  (with-accessors ((l1 x) (t1 y) (w1 width) (h1 height)) room
+    (let ((r1 (+ l1 w1)) (b1 (+ t1 h1)))
+      (dolist (n rooms)
+	(with-accessors ((l2 x) (t2 y) (w2 width) (h2 height)) n
+	  (let ((r2 (+ l2 w2)) (b2 (+ t2 h2)))
+	    (if (and (>= r1 l2) (<= l1 r2) (>= b1 t2) (<= t1 b2))
+		(return-from has-overlap T)))))))
+  nil)
+
 (defclass floor (shape)
   ((top :initform 0
 	:accessor top
