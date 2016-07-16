@@ -67,6 +67,12 @@
 	       :accessor y
 	       :documentation "Position of the shape's y-coordinate.")))
 
+(defmethod translate ((shape shape) dx dy)
+  "Translate a shape by the specified offsets."
+  (with-accessors ((x x) (y y)) shape
+    (setq x (+ x dx))
+    (setq y (+ y dy))))
+
 (defclass room (shape)
   ((width :initarg :width
 	  :initform (random-from 4 71)
