@@ -119,6 +119,7 @@
 	  :documentation "List of rooms on the floor.")))
 
 (defmethod add ((room room) (floor floor))
+  "Add a non-overlapping room to a floor."
   (with-accessors ((top top)
 		   (left left)
 		   (bottom bottom)
@@ -128,12 +129,12 @@
 		     (y y)
 		     (width width)
 		     (height height)) room
-      ;; TODO: check for no overlap
-      (setf top (min y top))
-      (setf left (min x left))
-      (setf bottom (max (+ y height) bottom))
-      (setf right (max (+ x width) right))
-      (push room data))))
+      (unless (has-overlap room data)
+	(setf top (min y top))
+	(setf left (min x left))
+	(setf bottom (max (+ y height) bottom))
+	(setf right (max (+ x width) right))
+	(push room data)))))
 
 ;;; Test generation of a random room.
 (setf *random-state* (make-random-state t))
