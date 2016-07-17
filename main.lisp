@@ -47,11 +47,11 @@
     (make-area width height)))
 
 (defun draw-area (area)
-  "Draw the specified area to standard output."
+  "Draw an area to the screen."
   (format t "~{~{~a~}~%~}" area))
 
 (defgeneric draw (shape)
-  (:documentation "Draw the specified shape to the screen."))
+  (:documentation "Draw a shape to the screen."))
 
 (defclass shape ()
   ((x-position :initarg :x
@@ -87,7 +87,7 @@
     (setf data (make-area width height))))
 
 (defmethod draw ((shape area))
-  "Draw the specified area to the screen."
+  "Draw an area to the screen."
   (draw-area (slot-value shape 'data)))
 
 (defun has-overlap (area area-list)
