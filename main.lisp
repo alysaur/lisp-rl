@@ -1,4 +1,4 @@
-;;;; Alysaur trying to make a floor.
+;;;; Alysaur trying to make a level.
 
 (defun random-from (low high)
   "Return a random number between the specified low and high limits."
@@ -29,8 +29,8 @@
   (loop repeat height
      collect (make-walled-slice width)))
 
-(defun make-room (width height)
-  "Make a room of the specifed width and height.
+(defun make-area (width height)
+  "Make an area of the specifed width and height.
     e.g. '######'
          '#....#'
          '#....#'
@@ -40,22 +40,22 @@
 	(nconc (make-walled-slices width (- height 2))
 	       (list (make-wall width)))))
 
-(defun make-random-room ()
-  "Make a room of random width and height."
+(defun make-random-area ()
+  "Make an area of random width and height."
   (let ((width (random-from 3 50))
 	(height (random-from 3 10)))
-    (make-room width height)))
+    (make-area width height)))
 
-(defun draw-room (room)
-  "Draw the specified room to standard output."
-  (format t "~{~{~a~}~%~}" room))
+(defun draw-area (area)
+  "Draw the specified area to standard output."
+  (format t "~{~{~a~}~%~}" area))
 
 (defgeneric draw (shape)
   (:documentation "Draw the specified shape to the screen."))
 
-(defmethod draw ((shape room))
-  "Draw the specified room to the screen."
-  (draw-room (slot-value shape 'data)))
+(defmethod draw ((shape area))
+  "Draw the specified area to the screen."
+  (draw-area (slot-value shape 'data)))
 
 (defclass shape ()
   ((x-position :initarg :x
@@ -73,69 +73,69 @@
     (setq x (+ x dx))
     (setq y (+ y dy))))
 
-(defclass room (shape)
+(defclass area (shape)
   ((width :initarg :width
 	  :initform (random-from 4 71)
 	  :accessor width
-	  :documentation "Width of the room.")
+	  :documentation "Width of the area.")
    (height :initarg :height
 	   :initform (random-from 4 13)
 	   :accessor height
-	   :documentation "Height of the room.")
+	   :documentation "Height of the area.")
    (data :accessor data
-	 :documentation "A list of lists for the tiles in a room.")))
+	 :documentation "A list of lists for the tiles in an area.")))
 
-(defmethod initialize-instance :after ((room room) &key)
-  "Initialize data with a room of the specified width and height."
-  (with-slots (width height data) room
-    (setf data (make-room width height))))
+(defmethod initialize-instance :after ((area area) &key)
+  "Initialize data with an area of the specified width and height."
+  (with-slots (width height data) area
+    (setf data (make-area width height))))
 
-(defun has-overlap (room rooms)
-  "Check if a room overlaps with a list of rooms."
-  (with-accessors ((l1 x) (t1 y) (w1 width) (h1 height)) room
+(defun has-overlap (area area-list)
+  "Check if an area overlaps with a list of areas."
+  (with-accessors ((l1 x) (t1 y) (w1 width) (h1 height)) area
     (let ((r1 (+ l1 w1)) (b1 (+ t1 h1)))
-      (dolist (n rooms)
+      (dolist (n area-list)
 	(with-accessors ((l2 x) (t2 y) (w2 width) (h2 height)) n
 	  (let ((r2 (+ l2 w2)) (b2 (+ t2 h2)))
 	    (if (and (>= r1 l2) (<= l1 r2) (>= b1 t2) (<= t1 b2))
 		(return-from has-overlap T)))))))
   nil)
 
-(defclass floor (shape)
+(defclass level (shape)
   ((top :initform 0
 	:accessor top
-	:documentation "First y-coordinate of the floor.")
+	:documentation "First y-coordinate of the level.")
    (left :initform 0
 	 :accessor left
-	 :documentation "First x-coordinate of the floor.")
+	 :documentation "First x-coordinate of the level.")
    (bottom :initform 0
 	   :accessor bottom
-	   :documentation "Last y-coordinate of the floor.")
+	   :documentation "Last y-coordinate of the level.")
    (right :initform 0
 	  :accessor right
-	  :documentation "Last x-coordinate of the floor.")
+	  :documentation "Last x-coordinate of the level.")
    (rooms :initform '()
 	  :accessor data
-	  :documentation "List of rooms on the floor.")))
+	  :documentation "List of areas on the level.")))
 
-(defmethod add ((room room) (floor floor))
-  "Add a non-overlapping room to a floor."
+(defmethod add ((new-area area) (level level))
+  "Add a non-overlapping area to a level."
   (with-accessors ((top top)
 		   (left left)
 		   (bottom bottom)
 		   (right right)
-		   (data data)) floor
+		   (current-areas data)) level
     (with-accessors ((x x)
 		     (y y)
 		     (width width)
-		     (height height)) room
-      (unless (has-overlap room data)
+		     (height height)) new-area
+      (unless (has-overlap new-area current-areas)
 	(setf top (min y top))
 	(setf left (min x left))
 	(setf bottom (max (+ y height) bottom))
 	(setf right (max (+ x width) right))
-	(push room data)))))
+	(push new-area current-areas)))))
 
-;;; Test generation of a random room.
+;;; Test generation of a random area.
 (setf *random-state* (make-random-state t))
-(draw (make-instance 'room))
+(draw (make-instance 'area))
