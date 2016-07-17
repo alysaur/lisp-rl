@@ -53,10 +53,6 @@
 (defgeneric draw (shape)
   (:documentation "Draw the specified shape to the screen."))
 
-(defmethod draw ((shape area))
-  "Draw the specified area to the screen."
-  (draw-area (slot-value shape 'data)))
-
 (defclass shape ()
   ((x-position :initarg :x
 	       :initform 0
@@ -89,6 +85,10 @@
   "Initialize data with an area of the specified width and height."
   (with-slots (width height data) area
     (setf data (make-area width height))))
+
+(defmethod draw ((shape area))
+  "Draw the specified area to the screen."
+  (draw-area (slot-value shape 'data)))
 
 (defun has-overlap (area area-list)
   "Check if an area overlaps with a list of areas."
