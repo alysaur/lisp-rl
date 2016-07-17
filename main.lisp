@@ -136,6 +136,35 @@
 	(setf right (max (+ x width) right))
 	(push new-area current-areas)))))
 
-;;; Test generation of a random area.
+(defun list-from-level (level)
+  "Create a list of lists of tiles from a level."
+  (with-accessors ((x1 left)
+		   (y1 top)
+		   (x2 right)
+		   (y2 bottom)
+		   (areas data)) level
+    (let ((tiles
+      ;; Create list of lists large enough to fit all level tiles.
+      (loop
+	 repeat (- y2 y1)
+	 collect (make-list (- x2 x1) :initial-element #\Space))))
+      ;; Copy areas into list.
+      (dolist (area areas)
+	(loop
+	   for n from (y area)
+	   for row in (data area)
+	   do (setf (subseq (nth n tiles) (x area)) row)))
+      tiles)))
+
+(defmethod draw ((shape level))
+  "Draw a level to the screen."
+  (draw-area (list-from-level shape)))
+
+
+;;; Test generation of a level.
 (setf *random-state* (make-random-state t))
-(draw (make-instance 'area))
+(defparameter shabam (make-instance 'level))
+(add (make-instance 'area :height 5 :width 8 :y 1) shabam)
+(add (make-instance 'area :height 6 :width 10 :x 12) shabam)
+(add (make-instance 'area :height 4 :width 14 :x 2 :y 7) shabam)
+(draw shabam)
